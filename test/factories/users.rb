@@ -10,4 +10,8 @@ FactoryGirl.define do
   factory :bob, class: User do |u|
     u.name 'Bob'
   end
+
+  factory :user, class: User do |u|
+    u.name 'Another'
+  end
 end

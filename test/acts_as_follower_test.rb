@@ -200,6 +200,7 @@ class ActsAsFollowerTest < ActiveSupport::TestCase
     context "blocked by followable" do
       setup do
         @jon.block(@sam)
+        @user_follow = FactoryGirl.create(:user)
       end
 
       should "return following_status" do
