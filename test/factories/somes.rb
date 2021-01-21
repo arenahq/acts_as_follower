@@ -1,9 +1,9 @@
-FactoryGirl.define do
-  factory :daddy, :class => Some do |b|
-    b.name 'Daddy'
+FactoryBot.define do
+  factory :daddy, class: Some do
+    name { 'Daddy' }
   end
 
-  factory :mommy, :class => Some do |b|
-    b.name 'Mommy'
+  factory :mommy, class: Some do
+    name { 'Mommy' }
   end
 end

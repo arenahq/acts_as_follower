@@ -4,7 +4,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
 
   context "instance methods" do
     setup do
-      @sam = FactoryGirl.create(:sam)
+      @sam = FactoryBot.create(:sam)
     end
 
     should "be defined" do
@@ -16,12 +16,12 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
 
   context "acts_as_followable" do
     setup do
-      @sam = FactoryGirl.create(:sam)
-      @jon = FactoryGirl.create(:jon)
-      @oasis = FactoryGirl.create(:oasis)
-      @metallica = FactoryGirl.create(:metallica)
-      @green_day = FactoryGirl.create(:green_day)
-      @blink_182 = FactoryGirl.create(:blink_182)
+      @sam = FactoryBot.create(:sam)
+      @jon = FactoryBot.create(:jon)
+      @oasis = FactoryBot.create(:oasis)
+      @metallica = FactoryBot.create(:metallica)
+      @green_day = FactoryBot.create(:green_day)
+      @blink_182 = FactoryBot.create(:blink_182)
       @sam.follow(@jon)
     end
 
@@ -32,7 +32,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
 
       should "return the proper number of multiple followers" do
-        @bob = FactoryGirl.create(:bob)
+        @bob = FactoryBot.create(:bob)
         @sam.follow(@bob)
         assert_equal 0, @sam.followers_count
         assert_equal 1, @jon.followers_count
@@ -47,7 +47,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
 
       should "return users (multiple followers)" do
-        @bob = FactoryGirl.create(:bob)
+        @bob = FactoryBot.create(:bob)
         @sam.follow(@bob)
         assert_equal [], @sam.followers
         assert_equal [@sam], @jon.followers
@@ -55,7 +55,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
 
       should "return users (multiple followers, complex)" do
-        @bob = FactoryGirl.create(:bob)
+        @bob = FactoryBot.create(:bob)
         @sam.follow(@bob)
         @jon.follow(@bob)
         assert_equal [], @sam.followers
@@ -64,7 +64,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
 
       should "accept AR options" do
-        @bob = FactoryGirl.create(:bob)
+        @bob = FactoryBot.create(:bob)
         @bob.follow(@jon)
         assert_equal 1, @jon.followers(limit: 1).count
       end
@@ -88,7 +88,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
 
     context "get follow record" do
       setup do
-        @bob = FactoryGirl.create(:bob)
+        @bob = FactoryBot.create(:bob)
         @follow = @bob.follow(@sam)
       end
 
@@ -103,7 +103,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
 
     context "blocks" do
       setup do
-        @bob = FactoryGirl.create(:bob)
+        @bob = FactoryBot.create(:bob)
         @jon.block(@sam)
         @jon.block(@bob)
       end
