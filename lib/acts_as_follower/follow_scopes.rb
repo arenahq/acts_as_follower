@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ActsAsFollower #:nodoc:
   module FollowScopes
-
     # returns Follow records where follower is the record passed in.
     def for_follower(follower)
       where(follower_id: follower.id, follower_type: parent_class_name(follower))
@@ -23,12 +24,12 @@ module ActsAsFollower #:nodoc:
 
     # returns Follow records from past 2 weeks with default parameter.
     def recent(from)
-      where(["created_at > ?", (from || 2.weeks.ago).to_s(:db)])
+      where(['created_at > ?', (from || 2.weeks.ago).to_s(:db)])
     end
 
     # returns Follow records in descending order.
     def descending
-      order("follows.created_at DESC")
+      order('follows.created_at DESC')
     end
 
     # returns unblocked Follow records.
@@ -40,6 +41,5 @@ module ActsAsFollower #:nodoc:
     def blocked
       where(blocked: true)
     end
-
   end
 end

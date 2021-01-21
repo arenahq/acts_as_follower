@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :jon, class: User do
     name { 'Jon' }
@@ -5,7 +7,7 @@ FactoryBot.define do
 
   factory :sam, class: User do
     name { 'Sam' }
-   end
+  end
 
   factory :bob, class: User do
     name { 'Bob' }

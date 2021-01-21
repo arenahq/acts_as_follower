@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['2.6', '2.7', '3.0']
+        ruby-version: ['2.6', '2.7']
+        rails-version: ['~> 5.1.7', '~> 5.2.4', '~> 6.0.3', '~> 6.1.1']
 
     steps:
     - uses: actions/checkout@v2
@@ -31,5 +32,10 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      env:
+        RAILS_VERSION: ${{ matrix.rails-version }}
     - name: Run tests
-      run: bundle exec rake
+      run: bundle exec rake test
+    # - name: Run rubocop
+      # run: bundle exec rubocop
+      # continue-on-error: true

@@ -1,8 +1,0 @@
-language: ruby
-rvm:
-  - 2.6.6
-  - 2.7.2
-env:
-  matrix:
-    - "RAILS_VERSION=4.2.9"
-    - "RAILS_VERSION=5.0"

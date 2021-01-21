@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :oasis, class: Band do
     name { 'Oasis' }
@@ -7,11 +9,11 @@ FactoryBot.define do
     name { 'Metallica' }
   end
 
-  factory :green_day, :class => Band::Punk do
+  factory :green_day, class: Band::Punk do
     name { 'Green Day' }
   end
 
-  factory :blink_182, :class => Band::Punk::PopPunk do
+  factory :blink_182, class: Band::Punk::PopPunk do
     name { 'Blink 182' }
   end
 end

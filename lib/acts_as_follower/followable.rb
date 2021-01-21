@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ActsAsFollower #:nodoc:
   module Followable
-
     def self.included(base)
       base.extend ClassMethods
     end
@@ -14,31 +15,26 @@ module ActsAsFollower #:nodoc:
     end
 
     module InstanceMethods
-
       # Returns the number of followers a record has.
       def followers_count
-        self.followings.unblocked.count
+        followings.unblocked.count
       end
 
       # Returns the followers by a given type
-      def followers_by_type(follower_type, options={})
-        follows = follower_type.constantize.
-          joins(:follows).
-          where('follows.blocked'         => false,
-                'follows.followable_id'   => self.id,
-                'follows.followable_type' => parent_class_name(self),
-                'follows.follower_type'   => follower_type)
-        if options.has_key?(:limit)
-          follows = follows.limit(options[:limit])
-        end
-        if options.has_key?(:includes)
-          follows = follows.includes(options[:includes])
-        end
+      def followers_by_type(follower_type, options = {})
+        follows = follower_type.constantize
+                               .joins(:follows)
+                               .where('follows.blocked' => false,
+                                      'follows.followable_id' => id,
+                                      'follows.followable_type' => parent_class_name(self),
+                                      'follows.follower_type' => follower_type)
+        follows = follows.limit(options[:limit]) if options.key?(:limit)
+        follows = follows.includes(options[:includes]) if options.key?(:includes)
         follows
       end
 
       def followers_by_type_count(follower_type)
-        self.followings.unblocked.for_follower_type(follower_type).count
+        followings.unblocked.for_follower_type(follower_type).count
       end
 
       # Allows magic names on followers_by_type
@@ -47,9 +43,9 @@ module ActsAsFollower #:nodoc:
       # e.g. count_user_followers == followers_by_type_count('User')
       def method_missing(m, *args)
         if m.to_s[/count_(.+)_followers/]
-          followers_by_type_count($1.singularize.classify)
+          followers_by_type_count(Regexp.last_match(1).singularize.classify)
         elsif m.to_s[/(.+)_followers/]
-          followers_by_type($1.singularize.classify)
+          followers_by_type(Regexp.last_match(1).singularize.classify)
         else
           super
         end
@@ -60,18 +56,18 @@ module ActsAsFollower #:nodoc:
       end
 
       def blocked_followers_count
-        self.followings.blocked.count
+        followings.blocked.count
       end
 
       # Returns the followings records scoped
       def followers_scoped
-        self.followings.includes(:follower)
+        followings.includes(:follower)
       end
 
-      def followers(options={})
+      def followers(options = {})
         followers_scope = followers_scoped.unblocked
         followers_scope = apply_options_to_scope(followers_scope, options)
-        followers_scope.to_a.collect{|f| f.follower}
+        followers_scope.to_a.collect(&:follower)
       end
 
       # We don't want your blocks! We want our blocks!
@@ -84,7 +80,7 @@ module ActsAsFollower #:nodoc:
       # Returns true if the current instance is followed by the passed record
       # Returns false if the current instance is blocked by the passed record or no follow is found
       def followed_by?(follower)
-        self.followings.unblocked.for_follower(follower).first.present?
+        followings.unblocked.for_follower(follower).first.present?
       end
 
       def block(follower)
@@ -96,7 +92,7 @@ module ActsAsFollower #:nodoc:
       end
 
       def get_follow_for(follower)
-        self.followings.for_follower(follower).first
+        followings.for_follower(follower).first
       end
 
       private
@@ -108,7 +104,6 @@ module ActsAsFollower #:nodoc:
       def block_existing_follow(follower)
         get_follow_for(follower).block!
       end
-
     end
   end
 end

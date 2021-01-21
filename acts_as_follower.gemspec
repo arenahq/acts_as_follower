@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "shoulda"
   s.add_development_dependency "factory_bot"
   s.add_development_dependency "rails", ">= 5.0"
+  s.add_development_dependency "rubocop", ">= 1.0"
 end

@@ -1,12 +1,11 @@
+# frozen_string_literal: true
+
 require 'bundler'
 Bundler::GemHelper.install_tasks
 
 require 'rake'
 require 'rake/testtask'
 require 'rdoc/task'
-
-desc 'Default: run unit tests.'
-task default: :test
 
 desc 'Test the acts_as_follower gem.'
 Rake::TestTask.new(:test) do |t|
@@ -25,13 +24,19 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
 end
 
 namespace :rcov do
-  desc "Generate a coverage report in coverage/"
+  desc 'Generate a coverage report in coverage/'
   task :gen do
     sh "rcov --output coverage test/*_test.rb --exclude 'gems/*'"
   end
 
-  desc "Remove generated coverage files."
+  desc 'Remove generated coverage files.'
   task :clobber do
-    sh "rm -rdf coverage"
+    sh 'rm -rdf coverage'
   end
 end
+
+# rubocop tasks
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new(:rubocop)
+
+task default: %i[test rubocop]
