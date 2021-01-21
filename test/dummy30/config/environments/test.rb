@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Dummy::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -8,7 +10,7 @@ Dummy::Application.configure do
   config.cache_classes = true
 
   # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
