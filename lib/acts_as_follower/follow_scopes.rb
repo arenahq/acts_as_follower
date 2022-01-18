@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActsAsFollower #:nodoc:
+module ActsAsFollower # :nodoc:
   module FollowScopes
     # returns Follow records where follower is the record passed in.
     def for_follower(follower)
