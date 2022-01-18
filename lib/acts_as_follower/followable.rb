@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActsAsFollower #:nodoc:
+module ActsAsFollower # :nodoc:
   module Followable
     def self.included(base)
       base.extend ClassMethods
