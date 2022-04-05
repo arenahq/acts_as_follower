@@ -11,5 +11,5 @@ class Follow < ActiveRecord::Base
   def block!
     update_attribute(:blocked, true)
   end
-  alias :restrict! :block!
+  alias restrict! block!
 end

@@ -133,7 +133,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
         @jon.restrict(@bob)
       end
 
-      should "accept AR options" do
+      should 'accept AR options' do
         assert_equal 1, @jon.restricts(limit: 1).count
       end
     end
@@ -213,7 +213,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
           assert_equal [], @jon.followers
         end
 
-        should "be in the list of blocks" do
+        should 'be in the list of blocks' do
           assert_equal [@sam], @jon.restricts
         end
       end
@@ -236,12 +236,11 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
           assert_equal [], @sam.followers
         end
 
-        should "be in the list of restricts" do
+        should 'be in the list of restricts' do
           assert_equal [@jon], @sam.restricts
         end
       end
     end
-
 
     context 'unblocking a blocked follow' do
       setup do
