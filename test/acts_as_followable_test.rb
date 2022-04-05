@@ -12,6 +12,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       assert @sam.respond_to?(:followers_count)
       assert @sam.respond_to?(:followers)
       assert @sam.respond_to?(:followed_by?)
+      assert @sam.respond_to?(:restricted_by?)
     end
   end
 
@@ -78,6 +79,17 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
     end
 
+    context 'restricted_by' do
+      setup do
+        @jon.restrict(@sam)
+      end
+
+      should 'return_restricted_status' do
+        assert_equal true, @jon.restricted_by?(@sam)
+        assert_equal false, @sam.restricted_by?(@jon)
+      end
+    end
+
     context 'destroying a followable' do
       setup do
         @jon.destroy
@@ -112,6 +124,18 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       # should "accept AR options" do
       #   assert_equal 1, @jon.blocks(limit: 1).count
       # end
+    end
+
+    context 'restricts' do
+      setup do
+        @bob = FactoryBot.create(:bob)
+        @jon.restrict(@sam)
+        @jon.restrict(@bob)
+      end
+
+      should 'accept AR options' do
+        assert_equal 1, @jon.restricts(limit: 1).count
+      end
     end
 
     context 'blocking a follower' do
@@ -166,6 +190,58 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
     end
 
+    context 'restricting a follower' do
+      context 'in my following list' do
+        setup do
+          @jon.restrict(@sam)
+        end
+
+        should 'remove him from followers' do
+          assert_equal 0, @jon.followers_count
+        end
+
+        should 'add him to the blocked followers' do
+          assert_equal 1, @jon.restricted_followers_count
+        end
+
+        should 'not be able to follow again' do
+          @jon.follow(@sam)
+          assert_equal 0, @jon.followers_count
+        end
+
+        should 'not be present when listing followers' do
+          assert_equal [], @jon.followers
+        end
+
+        should 'be in the list of blocks' do
+          assert_equal [@sam], @jon.restricts
+        end
+      end
+
+      context 'not in my following list' do
+        setup do
+          @sam.restrict(@jon)
+        end
+
+        should 'add him to the restricted followers' do
+          assert_equal 1, @sam.restricted_followers_count
+        end
+
+        should 'not be able to follow again' do
+          @sam.follow(@jon)
+          assert_equal 0, @sam.followers_count
+        end
+
+        should 'not be present when listing followers' do
+          assert_equal [], @sam.followers
+        end
+
+        should 'be in the list of restricts' do
+          assert_equal [@jon], @sam.restricts
+        end
+      end
+    end
+
     context 'unblocking a blocked follow' do
       setup do
         @jon.block(@sam)
@@ -178,6 +254,22 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
 
       should 'remove him from the blocked followers' do
         assert_equal 0, @jon.blocked_followers_count
+        # assert_equal [], @jon.blocks
+      end
+    end
+
+    context 'unrestricting a restricted follow' do
+      setup do
+        @jon.restrict(@sam)
+        @jon.unrestrict(@sam)
+      end
+
+      should 'not include the unblocked user in the list of followers' do
+        assert_equal [], @jon.followers
+      end
+
+      should 'remove him from the blocked followers' do
+        assert_equal 0, @jon.restricted_followers_count
         # assert_equal [], @jon.blocks
       end
     end
@@ -195,10 +287,21 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       should 'not be in the blocked followers count' do
         assert_equal 0, @jon.blocked_followers_count
       end
+    end
 
-      # should "not be in the blocks list" do
-      #   assert_equal [], @jon.blocks
-      # end
+    context 'unrestrict a non-existent follow' do
+      setup do
+        @sam.stop_following(@jon)
+        @jon.unrestrict(@sam)
+      end
+
+      should 'not be in the list of followers' do
+        assert_equal [], @jon.followers
+      end
+
+      should 'not be in the blocked followers count' do
+        assert_equal 0, @jon.restricted_followers_count
+      end
     end
 
     context 'followers_by_type' do
