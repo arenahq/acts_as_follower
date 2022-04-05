@@ -36,10 +36,12 @@ module ActsAsFollower # :nodoc:
     def unblocked
       where(blocked: false)
     end
+    alias :unrestricted :unblocked
 
     # returns blocked Follow records.
     def blocked
       where(blocked: true)
     end
+    alias :restricted :blocked
   end
 end

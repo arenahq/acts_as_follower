@@ -58,6 +58,7 @@ module ActsAsFollower # :nodoc:
       def blocked_followers_count
         followings.blocked.count
       end
+      alias :restricted_followers_count :blocked_followers_count
 
       # Returns the followings records scoped
       def followers_scoped
@@ -77,6 +78,12 @@ module ActsAsFollower # :nodoc:
       #   blocked_followers_scope.to_a.collect{|f| f.follower}
       # end
 
+      def restricts(options={})
+        blocked_followers_scope = followers_scoped.blocked
+        blocked_followers_scope = apply_options_to_scope(blocked_followers_scope, options)
+        blocked_followers_scope.to_a.collect{|f| f.follower}
+      end
+
       # Returns true if the current instance is followed by the passed record
       # Returns false if the current instance is blocked by the passed record or no follow is found
       def followed_by?(follower)
@@ -86,10 +93,12 @@ module ActsAsFollower # :nodoc:
       def block(follower)
         get_follow_for(follower) ? block_existing_follow(follower) : block_future_follow(follower)
       end
+      alias :restrict :block
 
       def unblock(follower)
         get_follow_for(follower).try(:delete)
       end
+      alias :unrestrict :unblock
 
       def get_follow_for(follower)
         followings.for_follower(follower).first

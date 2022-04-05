@@ -112,7 +112,7 @@ class ActsAsFollowerTest < ActiveSupport::TestCase
           assert_equal 2, @sam.following_by_type_count('Band')
           assert_equal 1, @sam.following_by_type_count('User')
           assert_equal 0, @jon.following_by_type_count('Band')
-          @jon.block(@sam)
+          @jon.restrict(@sam)
           assert_equal 0, @sam.following_by_type_count('User')
         end
       end
@@ -202,9 +202,9 @@ class ActsAsFollowerTest < ActiveSupport::TestCase
       should_change('@sam.follow_count', by: -1) { @sam.follow_count }
     end
 
-    context 'blocked by followable' do
+    context 'restricted by followable' do
       setup do
-        @jon.block(@sam)
+        @jon.restrict(@sam)
         @user_follow = FactoryBot.create(:user)
       end
 
@@ -216,7 +216,7 @@ class ActsAsFollowerTest < ActiveSupport::TestCase
         assert_equal 1, @sam.follow_count
       end
 
-      should 'not return record of the blocked follows' do
+      should 'not return record of the restricted follows' do
         assert_equal 1, @sam.all_follows.size
         assert !@sam.all_follows.include?(@user_follow)
         assert !@sam.all_following.include?(@jon)
