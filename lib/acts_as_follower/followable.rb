@@ -90,6 +90,12 @@ module ActsAsFollower # :nodoc:
         followings.unblocked.for_follower(follower).first.present?
       end
 
+      # Returns true if the current instance is blocked by the passed record
+      # Returns false if the current instance is not blocked by the passed record or no follow is found
+      def restricted_by?(follower)
+        followings.blocked.for_follower(follower).first.present?
+      end
+
       def block(follower)
         get_follow_for(follower) ? block_existing_follow(follower) : block_future_follow(follower)
       end
