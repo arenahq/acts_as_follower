@@ -85,8 +85,8 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
 
       should 'return_restricted_status' do
-        assert_equal true, @jon.restricted_by?(@sam)
-        assert_equal false, @sam.restricted_by?(@jon)
+        assert_equal false, @jon.restricted_by?(@sam)
+        assert_equal true, @sam.restricted_by?(@jon)
       end
     end
 
