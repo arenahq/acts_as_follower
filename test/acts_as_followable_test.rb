@@ -13,6 +13,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       assert @sam.respond_to?(:followers)
       assert @sam.respond_to?(:followed_by?)
       assert @sam.respond_to?(:restricted_by?)
+      assert @sam.respond_to?(:restricted?)
     end
   end
 
@@ -79,7 +80,7 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       end
     end
 
-    context 'restricted_by' do
+    context 'restricted_by?' do
       setup do
         @jon.restrict(@sam)
       end
@@ -87,6 +88,17 @@ class ActsAsFollowableTest < ActiveSupport::TestCase
       should 'return_restricted_status' do
         assert_equal false, @jon.restricted_by?(@sam)
         assert_equal true, @sam.restricted_by?(@jon)
+      end
+    end
+
+    context 'restricted?' do
+      setup do
+        @jon.restrict(@sam)
+      end
+
+      should 'return_restricted_status' do
+        assert_equal true, @jon.restricted?(@sam)
+        assert_equal false, @sam.restricted?(@jon)
       end
     end
 
